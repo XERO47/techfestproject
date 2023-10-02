@@ -1,10 +1,11 @@
 import streamlit as st
-import requests
-import pandas as pd
+# import requests
+# import pandas as pd
 from datetime import datetime, timedelta
-import pytz
+# import pytz
 import folium
 from geopy.geocoders import Nominatim
+from streamlit_folium import st_folium
 
 geolocator = Nominatim(user_agent="my_app")
 
@@ -36,13 +37,13 @@ else:
 # Add a global map
 st.title("Global Temperature Map")
 m = folium.Map(location=[lat, lng], zoom_start=10)
-folium.TileLayer(
-    tiles="https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid={api_key}",
-    attr="OpenWeatherMap",
-    name="Temperature Map",
-    overlay=True,
+folium.Marker(
+    [lat,lng], popup="Liberty Bell", tooltip="Liberty Bell"
 ).add_to(m)
-st.write(m._repr_html_(), unsafe_allow_html=True)
+# call to render Folium map in Streamlit
+st_data = st_folium(m, width=725)
+
+
 
 # Add a chart
 # st.title("Temperature Over Time")
@@ -63,7 +64,7 @@ st.markdown("""
 <style>
 body {
     background-color: #f0f2f6;
-}
+}     
 </style>
 """, unsafe_allow_html=True)
 
@@ -87,3 +88,4 @@ body {
 #         if dt.hour == 12:
 #             st.write(
 #                 f"{dt.strftime('%A %B %d %Y')}: {forecast['weather'][0]['description']}, {forecast['main']['temp']}°{unit[0]}")
+
