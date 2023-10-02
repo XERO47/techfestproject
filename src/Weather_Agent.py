@@ -1,4 +1,5 @@
 from uagents import Agent, Context
+
 import utils.fetch as fetch_Weather_data
 class WeatherAgent(Agent):
     
@@ -8,8 +9,8 @@ class WeatherAgent(Agent):
         self.min_temp = min_temp
         self.max_temp = max_temp
         self.api_key = api_key
-
-    @Agent.on_interval(period=3600)  # Check every hour
+        
+    @Agent.on_interval(self,period=3600)  # Check every hour
     async def check_weather(self, ctx: Context):
         ctx.logger.info(f"hitsuccess")
         weather_data = fetch_Weather_data(self.location, self.api_key)
@@ -19,3 +20,4 @@ class WeatherAgent(Agent):
 
 agent=WeatherAgent("agg")
 agent.run()
+
