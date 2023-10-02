@@ -1,7 +1,7 @@
 import streamlit as st
 # import requests
 # import pandas as pd
-from datetime import datetime, timedelta
+# from datetime import datetime, timedelta
 # import pytz
 import folium
 from geopy.geocoders import Nominatim
@@ -12,7 +12,7 @@ geolocator = Nominatim(user_agent="my_app")
 api_key = "5b5af7a943581522b1aa5ef1102ef5e9"
 
 # Set up the sidebar
-st.sidebar.header("Settings`version 0`")
+st.sidebar.title("Dashboard`version 0`")
 location = st.sidebar.text_input("Location", "")
 unit = st.sidebar.selectbox("Unit", ["Celsius", "Fahrenheit"])
 forecast = st.sidebar.checkbox("Show Forecast")
@@ -33,12 +33,9 @@ else:
     # Default to London, UK if no location is provided
     lat, lng = 51.5074, -0.1278
 
-
-# Add a global map
-st.title("Global Temperature Map")
 m = folium.Map(location=[lat, lng], zoom_start=10)
 folium.Marker(
-    [lat,lng], popup="Liberty Bell", tooltip="Liberty Bell"
+    [lat,lng]
 ).add_to(m)
 # call to render Folium map in Streamlit
 st_data = st_folium(m, width=725)
@@ -60,10 +57,14 @@ st_data = st_folium(m, width=725)
 # st.line_chart(df['temp'])
 
 # Add CSS styling
+
 st.markdown("""
 <style>
 body {
     background-color: #f0f2f6;
+}
+iframe {
+    height: 400px;
 }     
 </style>
 """, unsafe_allow_html=True)
