@@ -4,12 +4,28 @@ import streamlit as st
 # from datetime import datetime, timedelta
 # import pytz
 import folium
+import json
 from geopy.geocoders import Nominatim
 from streamlit_folium import st_folium
 
 geolocator = Nominatim(user_agent="my_app")
-
 api_key = "5b5af7a943581522b1aa5ef1102ef5e9"
+
+
+st.markdown("""
+<style>
+body {
+    background-color: #f0f2f6;
+}
+iframe {
+    height: 400px;
+}
+.st-emotion-cache-a2tkzm {
+    width: 100%;
+    # background-color: #4CAF50;
+}     
+</style>
+""", unsafe_allow_html=True)
 
 # Set up the sidebar
 st.sidebar.title("Dashboard`version 0`")
@@ -24,6 +40,7 @@ col1.metric("Max", "70 °F", "1.2 °F")
 col2.metric("Min", "9 mph", "-8%")
 col3.metric("Humidity", "86%", "4%")
 
+# Row B
 # Get the latitude and longitude of the location using the Nominatim API
 if location:
     location = geolocator.geocode(location)
@@ -33,6 +50,7 @@ else:
     # Default to London, UK if no location is provided
     lat, lng = 51.5074, -0.1278
 
+# Map
 m = folium.Map(location=[lat, lng], zoom_start=10)
 folium.Marker(
     [lat,lng]
@@ -56,28 +74,33 @@ st_data = st_folium(m, width=725)
 #     df = df.apply(lambda x: (x * 9/5) + 32)
 # st.line_chart(df['temp'])
 
-# Add CSS styling
 
-st.markdown("""
-<style>
-body {
-    background-color: #f0f2f6;
-}
-iframe {
-    height: 400px;
-}     
-</style>
-""", unsafe_allow_html=True)
+
 
 # Set up the reminder
-# if st.sidebar.button("Set Reminder"):
-#     min_temp = st.sidebar.number_input("Minimum Temperature")
-#     max_temp = st.sidebar.number_input("Maximum Temperature")
-#     reminder = st.sidebar.text_input("Reminder Message")
-#     if min_temp and max_temp and reminder:
-#         if temp_min < min_temp or temp_max > max_temp:
-#             st.warning(reminder)
+if st.sidebar.button("Set Reminder"):
+    min_temp = st.sidebar.number_input("Minimum Temperature")
+    max_temp = st.sidebar.number_input("Maximum Temperature")
+    reminder = st.sidebar.text_input("Reminder Message")
+    if min_temp and max_temp and reminder:
+        if temp_min < min_temp or temp_max > max_temp:
+            st.warning(reminder)
 
+
+
+# Load the JSON file
+with open('/src/example.json', 'r') as f:
+    data = json.load(f)
+
+# Modify the data as needed
+data['latitude'] = lat
+data['longitude'] = lng
+data['max'] = max_temp
+data['min'] = min_temp
+
+# Save the modified data back to the file
+with open('/src/example.json', 'w') as f:
+    json.dump(data, f)
 # Show forecast
 # if forecast:
 #     st.title("Weather Forecast")
