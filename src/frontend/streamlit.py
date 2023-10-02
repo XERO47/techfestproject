@@ -89,7 +89,7 @@ if st.sidebar.button("Set Reminder"):
 
 
 # Load the JSON file
-with open('/src/example.json', 'r') as f:
+with open('example.json', 'r') as f:
     data = json.load(f)
 
 # Modify the data as needed
@@ -99,7 +99,7 @@ data['max'] = max_temp
 data['min'] = min_temp
 
 # Save the modified data back to the file
-with open('/src/example.json', 'w') as f:
+with open('example.json', 'w') as f:
     json.dump(data, f)
 # Show forecast
 # if forecast:
