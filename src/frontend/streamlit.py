@@ -95,8 +95,8 @@ with open('example.json', 'r') as f:
 # Modify the data as needed
 data['latitude'] = lat
 data['longitude'] = lng
-data['max'] = max_temp
-data['min'] = min_temp
+data['max'] = 0
+data['min'] = 0
 
 # Save the modified data back to the file
 with open('example.json', 'w') as f:
