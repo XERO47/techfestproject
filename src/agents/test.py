@@ -1,4 +1,5 @@
-from utils.fetch import fetch_realtime_weather_data as fwd
+
+from src.utils.fetch import *
 
 
 response=fetch_realtime_weather_data('pune')

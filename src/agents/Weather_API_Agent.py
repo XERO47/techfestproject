@@ -16,7 +16,8 @@ fund_agent_if_low(bob.wallet.address())
 @agent.on_message(model=Location)
 async def message_handler(ctx: Context, sender: str, loc: Location):
     ctx.logger.info(f"Received Coordinates from {sender}: {loc.location}")
-    temperature=fetch_realtime_weather_data()
+    response=fetch_realtime_weather_data(f'{loc.location}')
+
  
     await ctx.send(sender, Message(message="hello there alice"))
  
