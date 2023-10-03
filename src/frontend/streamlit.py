@@ -1,9 +1,8 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-# import pandas as pd
-# from datetime import datetime, timedelta
-# import pytz
 import folium
+import plotly.graph_objs as go
+import requests
 import json
 from geopy.geocoders import Nominatim
 from streamlit_folium import st_folium
@@ -20,7 +19,7 @@ geolocator = Nominatim(user_agent="my_app")
 st.markdown("""
 <style>
 body {
-    background-color: #f0f2f6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 iframe {
     height: 400px;
@@ -30,7 +29,17 @@ iframe {
     background-size: 200px;
     background-repeat: no-repeat;
     background-position: 4px 20px;
-}   
+}
+div.st-emotion-cache-13izhro {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    padding: 5% 5% 5% 10%;
+    border-radius: 5px;
+    
+    border-left: 0.5rem solid #9AD8E1 !important;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+    
+}  
 </style>
 """, unsafe_allow_html=True)
 
@@ -68,15 +77,6 @@ if st.sidebar.button("Set Reminder"):
 
 # ..................................ROWS.............................................
 
-
-# Row A
-st.markdown('### Metrics')
-col1, col2, col3 = st.columns(3)
-col1.metric("Max", "70 °F", "1.2 °F")
-col2.metric("Min", "9 mph", "-8%")
-col3.metric("Humidity", "86%", "4%")
-
-# Row B
 # Get the latitude and longitude of the location using the Nominatim API
 if location:
     location = geolocator.geocode(location)
@@ -88,16 +88,26 @@ else:
     lat = g.latlng[0]
     lng = g.latlng[1]
 
-# Map
-m = folium.Map(location=[lat, lng], zoom_start=10)
-folium.Marker(
-    [lat,lng]
-).add_to(m)
-# call to render Folium map in Streamlit
-st_data = st_folium(m, width=725)
 
+# ..............................Metrics..............................................
 
-# ..............................Weather forecast graph.............................
+st.markdown('### Metrics')
+col1, col2, col3, col4 = st.columns(4)
+
+response = fetch_realtime_weather_data(f'{lat},{lng}')
+weather_data = json.loads(response)
+
+temp = weather_data['data']['values']['temperature']
+rainProbablity = weather_data['data']['values']['precipitationProbability']
+wind_speed = weather_data['data']['values']['windSpeed']
+humidity = weather_data['data']['values']['humidity']
+
+col1.metric("Temp", f"{temp} °C")
+col3.metric("Humidity", f"{humidity}%")
+col4.metric("Wind Speed", f"{wind_speed}m/s")
+col2.metric("Rain Probablity", f"{rainProbablity}")
+
+# ..............................Weather forecast graph...............................
 
 if forecast:
     response = fetch_weather_forecast(f'{lat},{lng}')
@@ -110,17 +120,31 @@ if forecast:
         timestamps.append(minute['time'])
         temperatures.append(minute['values']['temperature'])
 
-    fig, ax = plt.subplots()
-    ax.plot(timestamps, temperatures)
-    ax.set_xlabel('Time')
-    ax.set_ylabel('Temperature (°C)')
-    ax.set_title(f'Temperature Forecast for {(geolocator.reverse(f"{lat}, {lng}")).address}')
+    fig = go.Figure()
+    fig.add_trace(go.Heatmap(x=timestamps, y=['Temperature'], z=[temperatures], colorscale='Viridis'))
+    fig.update_layout(title=f'Temperature Forecast for {(geolocator.reverse(f"{lat}, {lng}")).address}',
+                    xaxis_title='Time', yaxis_title='',
+                    xaxis=dict(showgrid=False, zeroline=False, showticklabels=True, tickfont=dict(size=12)),
+                    yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                    hovermode='x unified',
+                    font=dict(family='Arial', size=14, color='black'),
+                    paper_bgcolor='white',
+                    plot_bgcolor='white')
 
-    st.pyplot(fig)
+    st.plotly_chart(fig)
+
+# ..............................Map................................................
 
 
+m = folium.Map(location=[lat, lng], zoom_start=10)
+folium.Marker(
+    [lat,lng]
+).add_to(m)
+# call to render Folium map in Streamlit
+st_data = st_folium(m, width=725)
 
-# .................................................................................
+
+# .................................JsonFile Manupulation................................................
 
 # Load the JSON file
 with open('example.json', 'r') as f:
