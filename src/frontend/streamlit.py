@@ -63,8 +63,12 @@ suggestions = get_location_suggestions(location)
 if suggestions:
     location = st.sidebar.selectbox("Did you mean:", suggestions)
 
-unit = st.sidebar.selectbox("Unit", ["Celsius", "Fahrenheit"])
+# unit = st.sidebar.selectbox("Unit", ["Celsius", "Fahrenheit"])
 forecast = st.sidebar.checkbox("Show Forecast")
+
+if st.sidebar.button("Refresh"):
+    # Clear the cache
+    st.cache(allow_output_mutation=True)
 
 # Set up the reminder
 if st.sidebar.button("Set Reminder"):
@@ -97,41 +101,47 @@ col1, col2, col3, col4 = st.columns(4)
 response = fetch_realtime_weather_data(f'{lat},{lng}')
 weather_data = json.loads(response)
 
-temp = weather_data['data']['values']['temperature']
-rainProbablity = weather_data['data']['values']['precipitationProbability']
-wind_speed = weather_data['data']['values']['windSpeed']
-humidity = weather_data['data']['values']['humidity']
+try:
+    temp = weather_data['data']['values']['temperature']
+    rainProbablity = weather_data['data']['values']['precipitationProbability']
+    wind_speed = weather_data['data']['values']['windSpeed']
+    humidity = weather_data['data']['values']['humidity']
 
-col1.metric("Temp", f"{temp} °C")
-col3.metric("Humidity", f"{humidity}%")
-col4.metric("Wind Speed", f"{wind_speed}m/s")
-col2.metric("Rain Probablity", f"{rainProbablity}")
+    col1.metric("Temp", f"{temp} °C")
+    col3.metric("Humidity", f"{humidity}%")
+    col4.metric("Wind Speed", f"{wind_speed}m/s")
+    col2.metric("Rain Probablity", f"{rainProbablity}")
+except:
+    st.error("No weather data available")
+
 
 # ..............................Weather forecast graph...............................
 
 if forecast:
     response = fetch_weather_forecast(f'{lat},{lng}')
     data = json.loads(response)
+    try:
+        timestamps = []
+        temperatures = []
 
-    timestamps = []
-    temperatures = []
+        for minute in data['timelines']['minutely']:
+            timestamps.append(minute['time'])
+            temperatures.append(minute['values']['temperature'])
 
-    for minute in data['timelines']['minutely']:
-        timestamps.append(minute['time'])
-        temperatures.append(minute['values']['temperature'])
+        fig = go.Figure()
+        fig.add_trace(go.Heatmap(x=timestamps, y=['Temperature'], z=[temperatures], colorscale='Viridis'))
+        fig.update_layout(title=f'Temperature Forecast for {(geolocator.reverse(f"{lat}, {lng}")).address}',
+                        xaxis_title='Time', yaxis_title='',
+                        xaxis=dict(showgrid=False, zeroline=False, showticklabels=True, tickfont=dict(size=12)),
+                        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                        hovermode='x unified',
+                        font=dict(family='Arial', size=14, color='black'),
+                        paper_bgcolor='white',
+                        plot_bgcolor='white')
 
-    fig = go.Figure()
-    fig.add_trace(go.Heatmap(x=timestamps, y=['Temperature'], z=[temperatures], colorscale='Viridis'))
-    fig.update_layout(title=f'Temperature Forecast for {(geolocator.reverse(f"{lat}, {lng}")).address}',
-                    xaxis_title='Time', yaxis_title='',
-                    xaxis=dict(showgrid=False, zeroline=False, showticklabels=True, tickfont=dict(size=12)),
-                    yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-                    hovermode='x unified',
-                    font=dict(family='Arial', size=14, color='black'),
-                    paper_bgcolor='white',
-                    plot_bgcolor='white')
-
-    st.plotly_chart(fig)
+        st.plotly_chart(fig)
+    except:
+        st.error("No graph available")
 
 # ..............................Map................................................
 
