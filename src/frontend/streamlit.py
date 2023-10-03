@@ -94,8 +94,9 @@ st_data = st_folium(m, width=725)
 
 
 # Parse the JSON response
-response = fetch_weather_forecast('lucknow')
+response = fetch_weather_forecast(f'{lat},{lng}')
 data = json.loads(response)
+# st.write(data)
 
 # Extract the temperature values and timestamps
 timestamps = []
@@ -110,7 +111,7 @@ fig, ax = plt.subplots()
 ax.plot(timestamps, temperatures)
 ax.set_xlabel('Time')
 ax.set_ylabel('Temperature (°C)')
-ax.set_title('Temperature Forecast for Lucknow')
+ax.set_title(f'Temperature Forecast for {location}')
 
 # Display the graph in the Streamlit app
 st.pyplot(fig)
@@ -158,3 +159,5 @@ with open('example.json', 'w') as f:
 #             st.write(
 #                 f"{dt.strftime('%A %B %d %Y')}: {forecast['weather'][0]['description']}, {forecast['main']['temp']}°{unit[0]}")
 
+if st.button('Show Alert'):
+    st.success('This is a success alert!')

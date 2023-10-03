@@ -1,10 +1,8 @@
 import requests
-# from dotenv import load_dotenv
-# import os
-# load_dotenv()
-# api_key=os.getenv('Weather_API_key')
-
-api_key = '2c0tpsCfsR22CTGS0T12u50Rfd9LmZoC'
+from dotenv import load_dotenv
+import os
+load_dotenv()
+api_key=os.getenv('Weather_API_key')
 
 def fetch_realtime_weather_data(location):
     url = f"https://api.tomorrow.io/v4/weather/realtime?location={location}&apikey={api_key}"
