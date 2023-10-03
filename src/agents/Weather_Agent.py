@@ -8,4 +8,5 @@ user=Agent(
 )
 
 @user.on_interval(period=10)
-async def 
+async def call_agent_api(ctx: Context):
+    
