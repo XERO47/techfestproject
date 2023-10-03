@@ -101,6 +101,7 @@ data['min'] = 0
 # Save the modified data back to the file
 with open('example.json', 'w') as f:
     json.dump(data, f)
+    
 # Show forecast
 # if forecast:
 #     st.title("Weather Forecast")
