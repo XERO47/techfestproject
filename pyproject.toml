@@ -7,7 +7,9 @@ readme = "README.md"
 packages = [{include = "iit_b"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.10.8,<3.12"
+streamlit = "^1.27.1"
+uagents = "^0.6.2"
 
 
 [build-system]

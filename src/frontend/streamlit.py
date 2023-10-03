@@ -160,5 +160,6 @@ with open('example.json', 'w') as f:
 #             st.write(
 #                 f"{dt.strftime('%A %B %d %Y')}: {forecast['weather'][0]['description']}, {forecast['main']['temp']}°{unit[0]}")
 
-if st.button('Show Alert'):
-    st.success('This is a success alert!')
+def genrate_alert(current_temp):
+    pass
+    
