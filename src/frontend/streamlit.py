@@ -11,6 +11,7 @@ from streamlit_folium import st_folium
 geolocator = Nominatim(user_agent="my_app")
 api_key = "5b5af7a943581522b1aa5ef1102ef5e9"
 
+st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
 st.markdown("""
 <style>
@@ -22,7 +23,6 @@ iframe {
 }
 .st-emotion-cache-a2tkzm {
     width: 100%;
-    # background-color: #4CAF50;
 }     
 </style>
 """, unsafe_allow_html=True)
