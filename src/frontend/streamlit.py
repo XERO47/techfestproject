@@ -139,9 +139,8 @@ with open('example.json', 'r') as f:
     data = json.load(f)
 
 # Modify the data as needed
-data['latitude'] = lat
-data['longitude'] = lng
-data['max'] = 0
+data['location']= f'{lat},{lng}'
+data['max'] = 100
 data['min'] = 0
 
 # Save the modified data back to the file
