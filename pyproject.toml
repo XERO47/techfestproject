@@ -1,17 +1,12 @@
 [tool.poetry]
-name = "weather-app"
+name = "agent-api"
 version = "0.1.0"
 description = ""
 authors = ["XERO47 <141753439+XERO47@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "3.10.8"
-uagents = "^0.6.2"
-streamlit = "^1.27.1"
-folium = "^0.14.0"
-geopy = "^2.4.0"
-streamlit-folium = "^0.15.0"
+python = "^3.11"
 
 
 [build-system]
