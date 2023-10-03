@@ -27,9 +27,25 @@ iframe {
 </style>
 """, unsafe_allow_html=True)
 
-# Set up the sidebar
+
 st.sidebar.title("Dashboard`version 0`")
-location = st.sidebar.text_input("Location", "")
+
+def get_location_suggestions(location):
+    suggestions = []
+    if location:
+        results = geolocator.geocode(location, exactly_one=False)
+        for result in results:
+            suggestions.append(result.address)
+    return suggestions
+
+location = st.sidebar.text_input("Location", key="location_input")
+suggestions = get_location_suggestions(location)
+
+if suggestions:
+    location = st.sidebar.selectbox("Did you mean:", suggestions)
+
+
+
 unit = st.sidebar.selectbox("Unit", ["Celsius", "Fahrenheit"])
 forecast = st.sidebar.checkbox("Show Forecast")
 
@@ -101,7 +117,6 @@ data['min'] = 0
 # Save the modified data back to the file
 with open('example.json', 'w') as f:
     json.dump(data, f)
-    
 # Show forecast
 # if forecast:
 #     st.title("Weather Forecast")
