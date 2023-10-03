@@ -100,8 +100,8 @@ data = json.loads(response)
 # Extract the temperature values and timestamps
 timestamps = []
 temperatures = []
-st.write(data)
-for minute in data.timelines['minutely']:
+
+for minute in data['timelines']['minutely']:
     timestamps.append(minute['time'])
     temperatures.append(minute['values']['temperature'])
 
