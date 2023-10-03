@@ -79,7 +79,9 @@ if location:
     lng = location.longitude
 else:
     # Default to London, UK if no location is provided
-    lat, lng = 51.5074, -0.1278
+    location = geolocator.geocode("")
+    lat = location.latitude
+    lng = location.longitude
 
 # Map
 m = folium.Map(location=[lat, lng], zoom_start=10)
@@ -111,7 +113,7 @@ fig, ax = plt.subplots()
 ax.plot(timestamps, temperatures)
 ax.set_xlabel('Time')
 ax.set_ylabel('Temperature (°C)')
-ax.set_title(f'Temperature Forecast for {location}')
+ax.set_title(f'Temperature Forecast for {(geolocator.reverse(f"{latitude}, {longitude}")).address}')
 
 # Display the graph in the Streamlit app
 st.pyplot(fig)
