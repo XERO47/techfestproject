@@ -16,5 +16,3 @@ def fetch_weather_forecast(location):
     response = requests.get(url, headers=headers)
     return(response.text)
 
-resposnes=fetch_realtime_weather_data('lucknow')
-print(resposnes)
