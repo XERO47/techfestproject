@@ -1,18 +1,14 @@
 import streamlit as st
+import matplotlib.pyplot as plt
 # import pandas as pd
 # from datetime import datetime, timedelta
 # import pytz
 import folium
 import json
-from fetch import *
 from geopy.geocoders import Nominatim
 from streamlit_folium import st_folium
 
 geolocator = Nominatim(user_agent="my_app")
-api_key = "5b5af7a943581522b1aa5ef1102ef5e9"
-
-st.set_page_config(layout='wide', initial_sidebar_state='expanded')
-
 
 # ...............................Style.............................................
 
@@ -23,18 +19,13 @@ body {
 }
 iframe {
     height: 400px;
-}
-.st-emotion-cache-a2tkzm {
-    width: 100%;
-}     
+}   
 </style>
 """, unsafe_allow_html=True)
 
-# ..................................................................................
 
+# .............................Sidebar..............................................
 
-
-# ..................................................................................
 
 st.sidebar.title("Dashboard`version 0`")
 
@@ -56,6 +47,15 @@ if suggestions:
 
 unit = st.sidebar.selectbox("Unit", ["Celsius", "Fahrenheit"])
 forecast = st.sidebar.checkbox("Show Forecast")
+
+# Set up the reminder
+if st.sidebar.button("Set Reminder"):
+    min_temp = st.sidebar.number_input("Minimum Temperature")
+    max_temp = st.sidebar.number_input("Maximum Temperature")
+    reminder = st.sidebar.text_input("Reminder Message")
+    if min_temp and max_temp and reminder:
+        if temp_min < min_temp or temp_max > max_temp:
+            st.warning(reminder)
 
 # ...............................................................................
 
@@ -86,6 +86,30 @@ folium.Marker(
 st_data = st_folium(m, width=725)
 
 
+# ..............................Weather forecast..................................
+
+
+# Parse the JSON response
+response = fetch.fetch_weather_forecast(location)
+data = json.loads(response)
+
+# Extract the temperature values and timestamps
+timestamps = []
+temperatures = []
+for minute in data['timelines']['minutely']:
+    timestamps.append(minute['time'])
+    temperatures.append(minute['values']['temperature'])
+
+# Create a line graph of the temperature values over time
+fig, ax = plt.subplots()
+ax.plot(timestamps, temperatures)
+ax.set_xlabel('Time')
+ax.set_ylabel('Temperature (°C)')
+ax.set_title('Temperature Forecast for Lucknow')
+
+# Display the graph in the Streamlit app
+st.pyplot(fig)
+
 
 # Add a chart
 # st.title("Temperature Over Time")
@@ -101,17 +125,6 @@ st_data = st_folium(m, width=725)
 #     df = df.apply(lambda x: (x * 9/5) + 32)
 # st.line_chart(df['temp'])
 
-
-
-
-# Set up the reminder
-if st.sidebar.button("Set Reminder"):
-    min_temp = st.sidebar.number_input("Minimum Temperature")
-    max_temp = st.sidebar.number_input("Maximum Temperature")
-    reminder = st.sidebar.text_input("Reminder Message")
-    if min_temp and max_temp and reminder:
-        if temp_min < min_temp or temp_max > max_temp:
-            st.warning(reminder)
 
 
 
