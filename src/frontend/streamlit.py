@@ -7,6 +7,7 @@ import folium
 import json
 from geopy.geocoders import Nominatim
 from streamlit_folium import st_folium
+import geocoder
 import sys
 sys.path.append('../')
 
@@ -23,6 +24,12 @@ body {
 }
 iframe {
     height: 400px;
+}
+[data-testid="stSidebar"] {
+    background-image: url(https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.png);
+    background-size: 200px;
+    background-repeat: no-repeat;
+    background-position: 4px 20px;
 }   
 </style>
 """, unsafe_allow_html=True)
@@ -47,8 +54,6 @@ suggestions = get_location_suggestions(location)
 if suggestions:
     location = st.sidebar.selectbox("Did you mean:", suggestions)
 
-
-
 unit = st.sidebar.selectbox("Unit", ["Celsius", "Fahrenheit"])
 forecast = st.sidebar.checkbox("Show Forecast")
 
@@ -61,7 +66,7 @@ if st.sidebar.button("Set Reminder"):
         if temp_min < min_temp or temp_max > max_temp:
             st.warning(reminder)
 
-# ...............................................................................
+# ..................................ROWS.............................................
 
 
 # Row A
@@ -78,10 +83,10 @@ if location:
     lat = location.latitude
     lng = location.longitude
 else:
-    # Default to London, UK if no location is provided
-    location = geolocator.geocode("")
-    lat = location.latitude
-    lng = location.longitude
+    # Default to current location if no location is provided
+    g = geocoder.ip('me')
+    lat = g.latlng[0]
+    lng = g.latlng[1]
 
 # Map
 m = folium.Map(location=[lat, lng], zoom_start=10)
@@ -92,49 +97,30 @@ folium.Marker(
 st_data = st_folium(m, width=725)
 
 
-# ..............................Weather forecast..................................
+# ..............................Weather forecast graph.............................
 
+if forecast:
+    response = fetch_weather_forecast(f'{lat},{lng}')
+    data = json.loads(response)
 
-# Parse the JSON response
-response = fetch_weather_forecast(f'{lat},{lng}')
-data = json.loads(response)
-# st.write(data)
+    timestamps = []
+    temperatures = []
 
-# Extract the temperature values and timestamps
-timestamps = []
-temperatures = []
+    for minute in data['timelines']['minutely']:
+        timestamps.append(minute['time'])
+        temperatures.append(minute['values']['temperature'])
 
-for minute in data['timelines']['minutely']:
-    timestamps.append(minute['time'])
-    temperatures.append(minute['values']['temperature'])
+    fig, ax = plt.subplots()
+    ax.plot(timestamps, temperatures)
+    ax.set_xlabel('Time')
+    ax.set_ylabel('Temperature (°C)')
+    ax.set_title(f'Temperature Forecast for {(geolocator.reverse(f"{lat}, {lng}")).address}')
 
-# Create a line graph of the temperature values over time
-fig, ax = plt.subplots()
-ax.plot(timestamps, temperatures)
-ax.set_xlabel('Time')
-ax.set_ylabel('Temperature (°C)')
-ax.set_title(f'Temperature Forecast for {(geolocator.reverse(f"{latitude}, {longitude}")).address}')
-
-# Display the graph in the Streamlit app
-st.pyplot(fig)
-
-
-# Add a chart
-# st.title("Temperature Over Time")
-# start_time = datetime.now(pytz.utc) - timedelta(hours=24)
-# end_time = datetime.now(pytz.utc)
-# url = f"https://api.openweathermap.org/data/2.5/onecall/timemachine?lat={data['coord']['lat']}&lon={data['coord']['lon']}&start={int(start_time.timestamp())}&end={int(end_time.timestamp())}&appid={api_key}&units=metric"
-# response = requests.get(url)
-# data = response.json()
-# df = pd.DataFrame(data['hourly'])
-# df['dt'] = pd.to_datetime(df['dt'], unit='s')
-# df.set_index('dt', inplace=True)
-# if unit == "Fahrenheit":
-#     df = df.apply(lambda x: (x * 9/5) + 32)
-# st.line_chart(df['temp'])
+    st.pyplot(fig)
 
 
 
+# .................................................................................
 
 # Load the JSON file
 with open('example.json', 'r') as f:
@@ -148,17 +134,8 @@ data['min'] = 0
 # Save the modified data back to the file
 with open('example.json', 'w') as f:
     json.dump(data, f)
-# Show forecast
-# if forecast:
-#     st.title("Weather Forecast")
-#     url = f"https://api.openweathermap.org/data/2.5/forecast?q={location}&appid={api_key}&units=metric"
-#     response = requests.get(url)
-#     data = response.json()
-#     for forecast in data['list']:
-#         dt = datetime.fromtimestamp(forecast['dt'])
-#         if dt.hour == 12:
-#             st.write(
-#                 f"{dt.strftime('%A %B %d %Y')}: {forecast['weather'][0]['description']}, {forecast['main']['temp']}°{unit[0]}")
+
+# ...................................................................................
 
 def genrate_alert(current_temp):
     pass
