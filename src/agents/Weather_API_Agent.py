@@ -1,8 +1,20 @@
 from uagents.setup import fund_agent_if_low
 from uagents import Agent, Context, Model
 from utils import fetch_realtime_weather_data
+from dotenv import load_dotenv
+import os
+load_dotenv()
+api_key=os.getenv('Weather_API_key')
+
+    headers = {"accept": "application/json"}
+    response = requests.get(url, headers=headers)
+    return(response.text)
 class Location(Model):
     location: str
+    
+def fetch_realtime_weather_data(location):
+    url = f"https://api.tomorrow.io/v4/weather/realtime?location={location}&apikey={api_key}"
+
  
 agent = Agent(
     name="agent",

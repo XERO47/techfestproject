@@ -9,6 +9,9 @@ readme = "README.md"
 python = "3.10.8"
 uagents = "^0.6.2"
 streamlit = "^1.27.1"
+folium = "^0.14.0"
+geopy = "^2.4.0"
+streamlit-folium = "^0.15.0"
 
 
 [build-system]
