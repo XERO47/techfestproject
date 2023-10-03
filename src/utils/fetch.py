@@ -15,4 +15,4 @@ def fetch_weather_forecast(location):
     headers = {"accept": "application/json"}
     response = requests.get(url, headers=headers)
     return(response.text)
-
+print(fetch_realtime_weather_data('pune'))
