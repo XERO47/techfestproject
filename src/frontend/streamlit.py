@@ -1,10 +1,10 @@
 import streamlit as st
-# import requests
 # import pandas as pd
 # from datetime import datetime, timedelta
 # import pytz
 import folium
 import json
+from fetch import *
 from geopy.geocoders import Nominatim
 from streamlit_folium import st_folium
 
@@ -12,6 +12,9 @@ geolocator = Nominatim(user_agent="my_app")
 api_key = "5b5af7a943581522b1aa5ef1102ef5e9"
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
+
+
+# ...............................Style.............................................
 
 st.markdown("""
 <style>
@@ -27,6 +30,11 @@ iframe {
 </style>
 """, unsafe_allow_html=True)
 
+# ..................................................................................
+
+
+
+# ..................................................................................
 
 st.sidebar.title("Dashboard`version 0`")
 
@@ -48,6 +56,9 @@ if suggestions:
 
 unit = st.sidebar.selectbox("Unit", ["Celsius", "Fahrenheit"])
 forecast = st.sidebar.checkbox("Show Forecast")
+
+# ...............................................................................
+
 
 # Row A
 st.markdown('### Metrics')
