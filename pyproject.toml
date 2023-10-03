@@ -1,15 +1,14 @@
 [tool.poetry]
-name = "iit-b-techfest"
+name = "weather-app"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["XERO47 <141753439+XERO47@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "iit_b"}]
 
 [tool.poetry.dependencies]
-python = ">=3.10.8,<3.12"
-streamlit = "^1.27.1"
+python = "3.10.8"
 uagents = "^0.6.2"
+streamlit = "^1.27.1"
 
 
 [build-system]
