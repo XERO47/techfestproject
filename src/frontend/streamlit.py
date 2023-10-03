@@ -139,4 +139,3 @@ with open('example.json', 'w') as f:
 
 def genrate_alert(current_temp):
     pass
-    
