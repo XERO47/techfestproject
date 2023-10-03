@@ -7,6 +7,10 @@ import folium
 import json
 from geopy.geocoders import Nominatim
 from streamlit_folium import st_folium
+import sys
+sys.path.append('../')
+
+from src.utils.fetch import *
 
 geolocator = Nominatim(user_agent="my_app")
 
@@ -90,13 +94,14 @@ st_data = st_folium(m, width=725)
 
 
 # Parse the JSON response
-response = fetch.fetch_weather_forecast(location)
+response = fetch_weather_forecast('lucknow')
 data = json.loads(response)
 
 # Extract the temperature values and timestamps
 timestamps = []
 temperatures = []
-for minute in data['timelines']['minutely']:
+st.write(data)
+for minute in data.timelines['minutely']:
     timestamps.append(minute['time'])
     temperatures.append(minute['values']['temperature'])
 
