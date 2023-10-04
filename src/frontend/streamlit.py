@@ -1,10 +1,13 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
+import altair as alt
 import folium
 import plotly.graph_objs as go
 import requests
 import json
+from PIL import Image
 from geopy.geocoders import Nominatim
 from streamlit_folium import st_folium
 import geocoder
@@ -67,7 +70,7 @@ suggestions = get_location_suggestions(location)
 if suggestions:
     location = st.sidebar.selectbox("Did you mean:", suggestions)
 
-# unit = st.sidebar.selectbox("Unit", ["Celsius", "Fahrenheit"])
+unit = st.sidebar.selectbox("Unit", ["Celsius", "Fahrenheit"])
 forecast = st.sidebar.toggle("Show Forecast")
 
 if st.sidebar.button("Refresh"):
@@ -104,17 +107,26 @@ col1, col2, col3, col4 = st.columns(4)
 
 response = fetch_realtime_weather_data(f'{lat},{lng}')
 weather_data = json.loads(response)
-
+# st.write(weather_data)
 try:
-    temp = weather_data['data']['values']['temperature']
-    rainProbablity = weather_data['data']['values']['precipitationProbability']
-    wind_speed = weather_data['data']['values']['windSpeed']
-    humidity = weather_data['data']['values']['humidity']
+    if unit=="Fahrenheit":
+        temp = weather_data['current']['temp_f']
+        col1.metric("Temp", f"{temp} °F")
+    else:
+        temp = weather_data['current']['temp_c']
+        col1.metric("Temp", f"{temp} °C")
 
-    col1.metric("Temp", f"{temp} °C")
-    col3.metric("Humidity", f"{humidity}%")
-    col4.metric("Wind Speed", f"{wind_speed}m/s")
-    col2.metric("Rain Probablity", f"{rainProbablity}")
+    humidity = weather_data['current']['humidity']
+    wind = weather_data['current']['wind_kph']
+
+    col2.metric("Humidity", f"{humidity} %")
+    col3.metric("Wind", f"{wind} kph")
+
+    url = f'https:{weather_data["current"]["condition"]["icon"]}'
+    image = Image.open(requests.get(url, stream=True).raw)
+
+    col4.image(image, caption=f'{weather_data["location"]["name"]}')
+    st.markdown(f'{weather_data["current"]["condition"]["text"]}')
 except:
     st.error("No weather data available")
 
@@ -124,21 +136,65 @@ except:
 if forecast:
     response = fetch_weather_forecast(f'{lat},{lng}')
     data = json.loads(response)
-    try:
-        timestamps = []
-        temperatures = []
+    st.write(data)
+   
+    # Parse the JSON response into a format that can be used by the Altair chart
+    df = pd.DataFrame({
+        "date": data["forecast"]["forecastday"][0]["hour"],
+        "temp_max": [hour["temp_c"] for hour in data["forecast"]["forecastday"][0]["hour"]],
+        "precipitation": [hour["precip_mm"] for hour in data["forecast"]["forecastday"][0]["hour"]],
+        "weather": [hour["condition"]["text"] for hour in data["forecast"]["forecastday"][0]["hour"]]
+    })
 
-        for minute in data['timelines']['minutely']:
-            timestamps.append(minute['time'])
-            temperatures.append(minute['values']['temperature'])
+    # Define the color scale for the weather conditions
+    scale = alt.Scale(
+        domain=["Sunny", "Partly cloudy", "Cloudy", "Light rain", "Moderate rain", "Heavy rain", "Light snow", "Moderate snow", "Heavy snow"],
+        range=["#FFD700", "#FFA500", "#A9A9A9", "#87CEFA", "#1E90FF", "#0000FF", "#FFFAFA", "#DCDCDC", "#808080"]
+    )
 
-        df = pd.DataFrame({'Time': timestamps, 'Temperature': temperatures})
-        df['Time'] = pd.to_datetime(df['Time'], unit='s')
+    # Create the chart
+    brush = alt.selection_interval(encodings=["x"])
+    click = alt.selection_multi(encodings=["color"])
+    points = (
+        alt.Chart(df)
+        .mark_point()
+        .encode(
+            alt.X("date:T", title="Date"),
+            alt.Y(
+                "temp_max:Q",
+                title="Maximum Daily Temperature (C)",
+                scale=alt.Scale(domain=[-5, 40]),
+            ),
+            color=alt.condition(brush, "weather:N", alt.value("lightgray"), scale=scale),
+            size=alt.Size("precipitation:Q", scale=alt.Scale(range=[5, 200])),
+        )
+        .properties(width=550, height=300)
+        .add_selection(brush)
+        .transform_filter(click)
+    )
 
-        chart = st.line_chart(df.set_index('Time'), layout='wide', use_container_width=True, title='Temperature over time', line_width=2, color='red', opacity=0.8, x_axis_label='Time', y_axis_label='Temperature (°C)', legend=['Temperature'], font_color='blue', config={'displayModeBar': False, 'plotlyConfig': {'staticPlot': True}, 'backgroundColor': 'lightgray'})
+    bars = (
+        alt.Chart(df)
+        .mark_bar()
+        .encode( x="count()",
+            y="weather:N",
+            color=alt.condition(click, "weather:N", alt.value("lightgray"), scale=scale),
+        )
+        .transform_filter(brush)
+        .properties(
+            width=550,
+        )
+        .add_selection(click)
+    )
 
-    except:
-        st.error("No graph available")
+    chart = alt.vconcat(points, bars, data=df, title=f"Weather Forecast for {data['location']['name']}")
+
+    # Create Streamlit tabs for theme options
+    # tab1, tab2 = st.tabs(["Streamlit theme (default)", "Altair native theme"])
+    # with tab1:
+    #     st.altair_chart(chart, theme="streamlit", use_container_width=True)
+    # with tab2:
+    st.altair_chart(chart, theme=None, use_container_width=True)
 
 # ..............................Map................................................
 
