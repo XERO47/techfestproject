@@ -124,13 +124,13 @@ frozenlist = ">=1.1.0"
 
 [[package]]
 name = "altair"
-version = "5.1.1"
+version = "5.1.2"
 description = "Vega-Altair: A declarative statistical visualization library for Python."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "altair-5.1.1-py3-none-any.whl", hash = "sha256:bb421459b53c80ad45f2bd009c87da2a81165b8f7d5a90658e0fc1ffc741bf34"},
-    {file = "altair-5.1.1.tar.gz", hash = "sha256:ad6cd6983c8db69a34dd68e42653f6172b7fc3775b7190005107f1b4fc60d64d"},
+    {file = "altair-5.1.2-py3-none-any.whl", hash = "sha256:7219708ec33c152e53145485040f428954ed15fd09b2a2d89e543e6d111dae7f"},
+    {file = "altair-5.1.2.tar.gz", hash = "sha256:e5f52a71853a607c61ce93ad4a414b3d486cd0d46ac597a24ae8bd1ac99dd460"},
 ]
 
 [package.dependencies]
@@ -143,8 +143,8 @@ toolz = "*"
 typing-extensions = {version = ">=4.0.1", markers = "python_version < \"3.11\""}
 
 [package.extras]
-dev = ["anywidget", "black (<24)", "hatch", "ipython", "m2r", "mypy", "pandas-stubs", "pyarrow (>=11)", "pytest", "pytest-cov", "ruff", "types-jsonschema", "types-setuptools", "vega-datasets", "vegafusion[embed] (>=1.4.0)", "vl-convert-python (>=0.13.0)"]
-doc = ["docutils", "geopandas", "jinja2", "myst-parser", "numpydoc", "pillow (>=9,<10)", "pydata-sphinx-theme", "sphinx", "sphinx-copybutton", "sphinx-design", "sphinxext-altair"]
+dev = ["anywidget", "black (<24)", "hatch", "ipython", "m2r", "mypy", "pandas-stubs", "pyarrow (>=11)", "pytest", "pytest-cov", "ruff", "types-jsonschema", "types-setuptools", "vega-datasets", "vegafusion[embed] (>=1.4.0)", "vl-convert-python (>=0.14.0)"]
+doc = ["docutils", "geopandas", "jinja2", "myst-parser", "numpydoc", "pillow (>=9,<10)", "pydata-sphinx-theme", "scipy", "sphinx", "sphinx-copybutton", "sphinx-design", "sphinxext-altair"]
 
 [[package]]
 name = "apispec"
@@ -1592,13 +1592,13 @@ files = [
 
 [[package]]
 name = "streamlit"
-version = "1.27.1"
+version = "1.27.2"
 description = "A faster way to build and share data apps"
 optional = false
 python-versions = ">=3.8, !=3.9.7"
 files = [
-    {file = "streamlit-1.27.1-py2.py3-none-any.whl", hash = "sha256:22e1f7280ba76008f34fded768cf2a5122efeb27a5ebf0e4a4990426662823d5"},
-    {file = "streamlit-1.27.1.tar.gz", hash = "sha256:e987179942d7c518d6cfa3de80737dc1f3857ec4c38ea8a63b62a1ca90cb2506"},
+    {file = "streamlit-1.27.2-py2.py3-none-any.whl", hash = "sha256:726dd2bee638e0976aa72552900648d4ead4be28e30235355f10c25062669369"},
+    {file = "streamlit-1.27.2.tar.gz", hash = "sha256:33f9ae0de5b7d59cd7daba87754c54ec837a76c24acfc41d1f8e5148f20903ee"},
 ]
 
 [package.dependencies]
@@ -1621,13 +1621,13 @@ rich = ">=10.14.0,<14"
 tenacity = ">=8.1.0,<9"
 toml = ">=0.10.1,<2"
 tornado = ">=6.0.3,<7"
-typing-extensions = ">=4.1.0,<5"
+typing-extensions = ">=4.3.0,<5"
 tzlocal = ">=1.1,<6"
 validators = ">=0.2,<1"
 watchdog = {version = ">=2.1.5", markers = "platform_system != \"Darwin\""}
 
 [package.extras]
-snowflake = ["snowflake-snowpark-python"]
+snowflake = ["snowflake-connector-python (>=2.8.0)", "snowflake-snowpark-python (>=0.9.0)"]
 
 [[package]]
 name = "streamlit-folium"
@@ -2042,4 +2042,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "b3a9ba30eab2f0fe8beb28dac7f74dfbe1a3bf7c3b28056cd1ad66751aeb7276"
+content-hash = "d8bf1725356465585d1d48a19ecdb6414c91d4c186dcd650661b9e4e8bbe594c"

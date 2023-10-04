@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "agent-api"
+name = "techfestproject"
 version = "0.1.0"
 description = ""
 authors = ["XERO47 <141753439+XERO47@users.noreply.github.com>"]
@@ -7,11 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
-uagents = "*"
-python-dotenv = "^1.0.0"
-streamlit = "^1.27.1"
-geopy = "^2.4.0"
+uagents = "^0.6.2"
+streamlit = "^1.27.2"
 streamlit-folium = "^0.15.0"
+geopy = "^2.4.0"
+python-dotenv = "^1.0.0"
 
 
 [build-system]
