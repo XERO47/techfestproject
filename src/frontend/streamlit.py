@@ -1,5 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
+import pandas as pd
 import folium
 import plotly.graph_objs as go
 import requests
@@ -40,6 +41,9 @@ div.st-emotion-cache-13izhro {
     box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
     
 }  
+button{
+    width: 100%; !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -64,7 +68,7 @@ if suggestions:
     location = st.sidebar.selectbox("Did you mean:", suggestions)
 
 # unit = st.sidebar.selectbox("Unit", ["Celsius", "Fahrenheit"])
-forecast = st.sidebar.checkbox("Show Forecast")
+forecast = st.sidebar.toggle("Show Forecast")
 
 if st.sidebar.button("Refresh"):
     # Clear the cache
@@ -128,18 +132,11 @@ if forecast:
             timestamps.append(minute['time'])
             temperatures.append(minute['values']['temperature'])
 
-        fig = go.Figure()
-        fig.add_trace(go.Heatmap(x=timestamps, y=['Temperature'], z=[temperatures], colorscale='Viridis'))
-        fig.update_layout(title=f'Temperature Forecast for {(geolocator.reverse(f"{lat}, {lng}")).address}',
-                        xaxis_title='Time', yaxis_title='',
-                        xaxis=dict(showgrid=False, zeroline=False, showticklabels=True, tickfont=dict(size=12)),
-                        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-                        hovermode='x unified',
-                        font=dict(family='Arial', size=14, color='black'),
-                        paper_bgcolor='white',
-                        plot_bgcolor='white')
+        df = pd.DataFrame({'Time': timestamps, 'Temperature': temperatures})
+        df['Time'] = pd.to_datetime(df['Time'], unit='s')
 
-        st.plotly_chart(fig)
+        chart = st.line_chart(df.set_index('Time'), layout='wide', use_container_width=True, title='Temperature over time', line_width=2, color='red', opacity=0.8, x_axis_label='Time', y_axis_label='Temperature (°C)', legend=['Temperature'], font_color='blue', config={'displayModeBar': False, 'plotlyConfig': {'staticPlot': True}, 'backgroundColor': 'lightgray'})
+
     except:
         st.error("No graph available")
 
