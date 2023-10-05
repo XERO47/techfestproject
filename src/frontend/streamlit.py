@@ -126,7 +126,7 @@ try:
     image = Image.open(requests.get(url, stream=True).raw)
 
     col4.image(image, caption=f'{weather_data["location"]["name"]}')
-    st.markdown(f'{weather_data["current"]["condition"]["text"]}')
+    st.write(f'Last updated: {weather_data["current"]["last_updated"]}   |   {weather_data["current"]["condition"]["text"]}')
 except:
     st.error("No weather data available")
 
@@ -136,36 +136,42 @@ except:
 if forecast:
     response = fetch_weather_forecast(f'{lat},{lng}')
     data = json.loads(response)
-    st.write(data)
+    # st.write(data)
    
     # Parse the JSON response into a format that can be used by the Altair chart
     df = pd.DataFrame({
-        "date": data["forecast"]["forecastday"][0]["hour"],
+        "date":[time['time'] for time in data["forecast"]["forecastday"][0]["hour"]],
         "temp_max": [hour["temp_c"] for hour in data["forecast"]["forecastday"][0]["hour"]],
         "precipitation": [hour["precip_mm"] for hour in data["forecast"]["forecastday"][0]["hour"]],
-        "weather": [hour["condition"]["text"] for hour in data["forecast"]["forecastday"][0]["hour"]]
+        "weather": [hour["condition"]["text"] for hour in data["forecast"]["forecastday"][0]["hour"]],
+        "wind_speed": [hour["wind_kph"] for hour in data["forecast"]["forecastday"][0]["hour"]],
+        "rain_chance": [hour["chance_of_rain"] for hour in data["forecast"]["forecastday"][0]["hour"]],
     })
+
+    st.write(df)
 
     # Define the color scale for the weather conditions
     scale = alt.Scale(
-        domain=["Sunny", "Partly cloudy", "Cloudy", "Light rain", "Moderate rain", "Heavy rain", "Light snow", "Moderate snow", "Heavy snow"],
-        range=["#FFD700", "#FFA500", "#A9A9A9", "#87CEFA", "#1E90FF", "#0000FF", "#FFFAFA", "#DCDCDC", "#808080"]
+        domain=["Sunny","Patchy rain possible","Partly cloudy","Clear","Moderate rain"],
+        range=["#e7ba52", "#a7a7a7", "#aec7e8", "#1f77b4", "#9467bd"],
     )
+    color = alt.Color("weather:N", scale=scale)
 
     # Create the chart
     brush = alt.selection_interval(encodings=["x"])
     click = alt.selection_multi(encodings=["color"])
+
     points = (
         alt.Chart(df)
         .mark_point()
         .encode(
-            alt.X("date:T", title="Date"),
+            alt.X("date:T", title="Today", axis=alt.Axis(format="%H:%M")),
             alt.Y(
                 "temp_max:Q",
                 title="Maximum Daily Temperature (C)",
                 scale=alt.Scale(domain=[-5, 40]),
             ),
-            color=alt.condition(brush, "weather:N", alt.value("lightgray"), scale=scale),
+            color=alt.condition(brush, color, alt.value("lightgray")),
             size=alt.Size("precipitation:Q", scale=alt.Scale(range=[5, 200])),
         )
         .properties(width=550, height=300)
@@ -176,9 +182,10 @@ if forecast:
     bars = (
         alt.Chart(df)
         .mark_bar()
-        .encode( x="count()",
+        .encode(
+            x="count()",
             y="weather:N",
-            color=alt.condition(click, "weather:N", alt.value("lightgray"), scale=scale),
+            color=alt.condition(click, color, alt.value("lightgray")),
         )
         .transform_filter(brush)
         .properties(
@@ -189,11 +196,6 @@ if forecast:
 
     chart = alt.vconcat(points, bars, data=df, title=f"Weather Forecast for {data['location']['name']}")
 
-    # Create Streamlit tabs for theme options
-    # tab1, tab2 = st.tabs(["Streamlit theme (default)", "Altair native theme"])
-    # with tab1:
-    #     st.altair_chart(chart, theme="streamlit", use_container_width=True)
-    # with tab2:
     st.altair_chart(chart, theme=None, use_container_width=True)
 
 # ..............................Map................................................
@@ -210,7 +212,7 @@ st_data = st_folium(m, width=725)
 # .................................JsonFile Manupulation................................................
 
 # Load the JSON file
-with open('example.json', 'r') as f:
+with open('data.json', 'r') as f:
     data = json.load(f)
 
 # Modify the data as needed
@@ -219,7 +221,7 @@ data['max'] = 100
 data['min'] = 0
 
 # Save the modified data back to the file
-with open('example.json', 'w') as f:
+with open('data.json', 'w') as f:
     json.dump(data, f)
 
 # ...................................................................................
