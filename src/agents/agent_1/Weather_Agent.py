@@ -22,7 +22,10 @@ print(user.storage.get("lat")[0])
 
 @user.on_interval(period=120)
 async def call_agent_api(ctx: Context,):
-    await ctx.send(Weather_agent_address,Location_share(lat='52.23',lon="12.23"))
+    for i in range(len(ctx.storage.get('lat'))):
+        lat=ctx.storage.get('lat')[i]
+        lon=ctx.storage.get('lon')[i]     
+    await ctx.send(Weather_agent_address,Location_share(lat=f'{lat}',lon=f"{lon}"))
 
     
 @user.on_message(model=Temperature_reply)
