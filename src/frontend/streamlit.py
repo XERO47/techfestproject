@@ -222,7 +222,7 @@ st_data = st_folium(m, width=725)
 # .................................JsonFile Manupulation................................................
 
 # Load the JSON file
-with open('data.json', 'r') as f:
+with open('agent1qfu86j53jq_data.json', 'r') as f:
     data = json.load(f)
 
 # Modify the data as needed
@@ -231,7 +231,7 @@ data['max'] = 100
 data['min'] = 0
 
 # Save the modified data back to the file
-with open('data.json', 'w') as f:
+with open('agent1qfu86j53jq_data.json', 'w') as f:
     json.dump(data, f)
 
 # ...................................................................................
