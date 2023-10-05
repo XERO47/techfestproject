@@ -16,12 +16,13 @@ fund_agent_if_low(user.wallet.address())
 
 
 
-user.storage.set('status',[True])
+# user.storage.set('status',[True])[0]
 @user.on_interval(period=120)
 async def call_agent_api(ctx: Context,):
-    # for i in range(len(ctx.storage.get('lat'))):
-    #     lat=ctx.storage.remove('lat')[i]
-    #     lon=ctx.storage.get('lon')[i]     
+    for i in range(len(ctx.storage.get('lat'))):
+        lat=ctx.storage.get('lat')[i]
+        lon=ctx.storage.get('lon')[i]     
+        ctx.storage.('status',[True])[i]
     await ctx.send(Weather_agent_address,Location_share(lat=f'{lat}',lon=f"{lon}"))
 
     
