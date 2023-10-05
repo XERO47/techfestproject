@@ -226,9 +226,9 @@ with open('agent1qfu86j53jq_data.json', 'r') as f:
     data = json.load(f)
 
 # Modify the data as needed
-data['location']= f'{lat},{lng}'
-data['max'] = 100
-data['min'] = 0
+# data['location']= f'{lat},{lng}'
+# data['max'] = 100
+# data['min'] = 0
 
 # Save the modified data back to the file
 with open('agent1qfu86j53jq_data.json', 'w') as f:
