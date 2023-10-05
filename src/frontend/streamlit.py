@@ -17,6 +17,7 @@ import geocoder
 
 
 from utils.fetch import *
+from utils.alert_func import *
 
 geolocator = Nominatim(user_agent="my_app")
 
@@ -66,6 +67,8 @@ def get_location_suggestions(location):
             suggestions.append(result.address)
     return suggestions
 
+
+
 location = st.sidebar.text_input("Location", key="location_input")
 suggestions = get_location_suggestions(location)
 
@@ -75,8 +78,9 @@ if suggestions:
 unit = st.sidebar.selectbox("Unit", ["Celsius", "Fahrenheit"])
 
 if st.sidebar.button("Refresh"):
-    # Clear the cache
     st.cache(allow_output_mutation=True)
+# ..................................Alert.............................................
+
 
 # Set up the reminder
 if st.sidebar.button("Set Reminder"):
@@ -86,6 +90,7 @@ if st.sidebar.button("Set Reminder"):
     if min_temp and max_temp and reminder:
         if temp_min < min_temp or temp_max > max_temp:
             st.warning(reminder)
+
 
 # ..................................ROWS.............................................
 
@@ -137,7 +142,6 @@ except:
 try:
     response = fetch_weather_forecast(f'{lat},{lng}')
     data = json.loads(response)
-    # st.write(data)
    
     # Parse the JSON response into a format that can be used by the Altair chart
     df = pd.DataFrame({
@@ -151,8 +155,8 @@ try:
 
     # Define the color scale for the weather conditions
     scale = alt.Scale(
-        domain=["Sunny","Patchy rain possible","Partly cloudy","Clear","Moderate rain"],
-        range=["#e7ba52", "#a7a7a7", "#aec7e8", "#1f77b4", "#9467bd"],
+        domain=["Sunny","Partly cloudy","Clear","Patchy rain possible","Moderate rain","Mist"],
+        range=["#e7ba52", "#aec7e8", "#1f77b4", "#a7a7a7", "#9467bd", "#8c564b"],
     )
     color = alt.Color("weather:N", scale=scale)
 
@@ -233,4 +237,5 @@ with open('data.json', 'w') as f:
 # ...................................................................................
 
 def genrate_alert(current_temp):
-    pass
+    st.warning(f"Current temperature is {current_temp} °C")
+    
