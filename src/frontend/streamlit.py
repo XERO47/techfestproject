@@ -73,7 +73,6 @@ if suggestions:
     location = st.sidebar.selectbox("Did you mean:", suggestions)
 
 unit = st.sidebar.selectbox("Unit", ["Celsius", "Fahrenheit"])
-forecast = st.sidebar.toggle("Show Forecast")
 
 if st.sidebar.button("Refresh"):
     # Clear the cache
@@ -109,7 +108,7 @@ col1, col2, col3, col4 = st.columns(4)
 
 response = fetch_realtime_weather_data(f'{lat},{lng}')
 weather_data = json.loads(response)
-# st.write(weather_data)
+
 try:
     if unit=="Fahrenheit":
         temp = weather_data['current']['temp_f']
@@ -135,7 +134,7 @@ except:
 
 # ..............................Weather forecast graph...............................
 
-if forecast:
+try:
     response = fetch_weather_forecast(f'{lat},{lng}')
     data = json.loads(response)
     # st.write(data)
@@ -149,8 +148,6 @@ if forecast:
         "wind_speed": [hour["wind_kph"] for hour in data["forecast"]["forecastday"][0]["hour"]],
         "rain_chance": [hour["chance_of_rain"] for hour in data["forecast"]["forecastday"][0]["hour"]],
     })
-
-    st.write(df)
 
     # Define the color scale for the weather conditions
     scale = alt.Scale(
@@ -198,7 +195,14 @@ if forecast:
 
     chart = alt.vconcat(points, bars, data=df, title=f"Weather Forecast for {data['location']['name']}")
 
-    st.altair_chart(chart, theme=None, use_container_width=True)
+    tab1, tab2 = st.tabs(["Chart", "Data"])
+
+    with tab1:
+        st.altair_chart(chart, theme=None, use_container_width=True)
+    with tab2:
+        st.write(df)
+except:
+    st.error("No weather forecast data available")
 
 # ..............................Map................................................
 
