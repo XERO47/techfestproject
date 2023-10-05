@@ -1,3 +1,5 @@
+import sys
+sys.path.append('src')
 import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -11,10 +13,10 @@ from PIL import Image
 from geopy.geocoders import Nominatim
 from streamlit_folium import st_folium
 import geocoder
-import sys
-sys.path.append('../')
 
-from src.utils.fetch import *
+
+
+from utils.fetch import *
 
 geolocator = Nominatim(user_agent="my_app")
 

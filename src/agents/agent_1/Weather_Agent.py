@@ -13,9 +13,14 @@ user=Agent(
 Weather_agent_address='agent1qfxwgdmmv90g62hd2hau7d8kc76tkrs8zfkd9zsnempmm3wy46zvkvfvvjp'
 fund_agent_if_low(user.wallet.address())
 
-def parse_json_file(file):
-    pass
-@user.on_interval(period=2)
+user.storage.set("lat",[12,13,14])
+user.storage.set("lon",[12,13,14])
+print(user.storage.get("lat")[0])
+# for i in 
+#     print(f"{lat}")
+
+
+@user.on_interval(period=120)
 async def call_agent_api(ctx: Context,):
     await ctx.send(Weather_agent_address,Location_share(lat='52.23',lon="12.23"))
 
