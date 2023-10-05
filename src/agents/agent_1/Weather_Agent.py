@@ -14,10 +14,12 @@ Weather_agent_address='agent1qfxwgdmmv90g62hd2hau7d8kc76tkrs8zfkd9zsnempmm3wy46z
 fund_agent_if_low(user.wallet.address())
 
 def parse_json_file(file):
-    
+    pass
 @user.on_interval(period=2)
 async def call_agent_api(ctx: Context,):
-    await ctx.send(Weather_agent_address,Location_share(location='pune'))
+    await ctx.send(Weather_agent_address,Location_share(lat='52.23',lon="12.23"))
+
+    
 @user.on_message(model=Temperature_reply)
 async def get_information(ctx: Context,sender:str,temp:Temperature_reply):
 

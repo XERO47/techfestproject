@@ -1,7 +1,8 @@
 from uagents import Model
 
 class Location_share(Model):
-    location: str
+    lat: str
+    lon: str
 
 class Temperature_reply(Model):
     temprature: float
