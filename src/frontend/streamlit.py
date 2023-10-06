@@ -81,17 +81,27 @@ def main:
 
     if st.sidebar.button("Refresh"):
         st.cache(allow_output_mutation=True)
+
+
     # ..................................Alert.............................................
 
 
     # Set up the reminder
-    if st.sidebar.button("Set Reminder"):
-        min_temp = st.sidebar.number_input("Minimum Temperature")
-        max_temp = st.sidebar.number_input("Maximum Temperature")
-        reminder = st.sidebar.text_input("Reminder Message")
-        if min_temp and max_temp and reminder:
-            if temp_min < min_temp or temp_max > max_temp:
-                st.warning(reminder)
+    def set_weather_reminder():
+        min_temp = st.sidebar.slider("Minimum Temperature")
+        max_temp = st.sidebar.slider("Maximum Temperature")
+        email = st.sidebar.text_input("Want alert in your inbox?")
+        if st.sidebar.button("Set Reminder"):
+            st.cache(allow_output_mutation=True)
+            genrate_alert(current_temp)
+        return True
+    
+    if st.sidebar.button('Set Weather Reminder'):
+        if set_weather_reminder():
+            st.success('Weather reminder set successfully!')
+        else:
+            st.error('Failed to set weather reminder.')
+        
 
 
     # ..................................ROWS.............................................
