@@ -14,19 +14,20 @@ from messages.converse import Location_share,Temperature_reply
 agent = Agent(
     name="agent",
     seed="Weather agent secret phrase",
-    port=8001,
-    endpoint=["http://127.0.0.1:8001/submit"],
+    # port=8001,
+    # endpoint=["http://127.0.0.1:8001/submit"],
 )
  
 fund_agent_if_low(agent.wallet.address())
 
 @agent.on_message(model=Location_share)
 async def agent_message_handler(ctx: Context, sender: str, loc: Location_share):
+    print("Got the message....................")
     ctx.logger.info(f"Received Coordinates from {sender}: {loc.lat,loc.lon}")
     response=fetch_realtime_weather_data(f'{loc.lat},{loc.lon}')
     current_temprature=parse_resposne(response)
  
-    await ctx.send(sender, Temperature_reply(temprature= current_temprature))
+    await ctx.send(sender, Temperature_reply(temprature=loc.lat))
  
 if __name__ == "__main__":
     agent.run()

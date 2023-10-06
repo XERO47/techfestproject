@@ -6,7 +6,6 @@ import pandas as pd
 import numpy as np
 import altair as alt
 import folium
-import plotly.graph_objs as go
 import requests
 import json
 from PIL import Image
@@ -17,7 +16,7 @@ import geocoder
 
 
 from utils.fetch import *
-from utils.alert_func import *
+
 
 geolocator = Nominatim(user_agent="my_app")
 
