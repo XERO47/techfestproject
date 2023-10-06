@@ -251,8 +251,8 @@ def main():
 
     # ...................................................................................
 
-    def generate_alert(current_temp):
-        st.warning(f"Current temperature is {current_temp} °C")
+def generate_alert(current_temp):
+    st.warning(f"Current temperature is {current_temp} °C")
     
 if __name__ == "__main__":
     main()
