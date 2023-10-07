@@ -82,9 +82,6 @@ def main():
         st.cache(allow_output_mutation=True)
 
 
-    # ..................................Alert.............................................
-
-
     # Set up the reminder
 
     min_temp = st.sidebar.slider("Minimum Temperature")
@@ -92,6 +89,7 @@ def main():
     email = st.sidebar.text_input("Want alert in your inbox?")
     if st.sidebar.button("Set Reminder"):
         if min_temp and max_temp and email:
+            read_write_file('agent1qfu86j53jq_data.json')
             st.success("Reminder set successfully!")
         else:
             st.error("Failed to set reminder.")
@@ -100,6 +98,7 @@ def main():
 
 
     # ..................................ROWS.............................................
+
 
     # Get the latitude and longitude of the location using the Nominatim API
     if location:
@@ -111,6 +110,22 @@ def main():
         g = geocoder.ip('me')
         lat = g.latlng[0]
         lng = g.latlng[1]
+
+    # Load the JSON file
+    def read_write_file(file)
+        with open('file', 'r') as f:
+            data = json.load(f)
+
+        # Modify the data as needed
+        data['lat'].append(f'{lat}')
+        data['lon'].append(f'{lng}')
+        data['max'].append(f'{max_temp}')
+        data['min'].append(f'{min_temp}')
+        data['status'].append('active')
+    
+        # Save the modified data back to the file
+        with open('file', 'w') as f:
+            json.dump(data, f)
 
 
     # ..............................Metrics..............................................
@@ -232,21 +247,6 @@ def main():
     # call to render Folium map in Streamlit
     st_data = st_folium(m, width=725)
 
-
-    # .................................JsonFile Manupulation................................................
-
-    # Load the JSON file
-    with open('agent1qfu86j53jq_data.json', 'r') as f:
-        data = json.load(f)
-
-    # Modify the data as needed
-    # data['location']= f'{lat},{lng}'
-    # data['max'] = 100
-    # data['min'] = 0
-
-    # Save the modified data back to the file
-    with open('agent1qfu86j53jq_data.json', 'w') as f:
-        json.dump(data, f)
 
     # ...................................................................................
 
