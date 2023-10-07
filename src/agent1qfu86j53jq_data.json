@@ -1,18 +1,1 @@
-{
-    "lat": [
-        18.530823
-        
-    ],
-    "lon": [
-        73.847466
-    ],
-    "min_temp": [
-        12
-    ],
-    "max_temp": [
-        20
-    ],
-    "status": [
-        true
-    ]  
-}
+{"lat": [], "lon": [], "min_temp": [], "max_temp": [], "status": []}

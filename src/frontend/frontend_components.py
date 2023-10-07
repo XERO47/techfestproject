@@ -82,21 +82,7 @@ if st.sidebar.button("Refresh"):
     st.cache(allow_output_mutation=True)
 
 
-# Set up the reminder
-
-min_temp = st.sidebar.slider("Minimum Temperature")
-max_temp = st.sidebar.slider("Maximum Temperature")
-email = st.sidebar.text_input("Want alert in your inbox?")
-if st.sidebar.button("Set Reminder"):
-    if min_temp and max_temp and email:
-        read_write_file('agent1qfu86j53jq_data.json')
-        st.success("Reminder set successfully!")
-    else:
-        st.error("Failed to set reminder.")
-
     
-
-
 # ..................................ROWS.............................................
 
 
@@ -113,20 +99,32 @@ else:
 
 # Load the JSON file
 def read_write_file(file):
-    with open('file', 'r') as f:
+    with open(file, 'r') as f:
         data = json.load(f)
 
     # Modify the data as needed
     data['lat'].append(f'{lat}')
     data['lon'].append(f'{lng}')
-    data['max'].append(f'{max_temp}')
-    data['min'].append(f'{min_temp}')
-    data['status'].append('True')
+    data['max_temp'].append(f'{max_temp}')
+    data['min_temp'].append(f'{min_temp}')
+    data['status'].append(True)
 
     # Save the modified data back to the file
-    with open('file', 'w') as f:
+    with open(file, 'w') as f:
         json.dump(data, f)
 
+min_temp = st.sidebar.slider("Minimum Temperature")
+max_temp = st.sidebar.slider("Maximum Temperature")
+email = st.sidebar.text_input("Want alert in your inbox?")
+if st.sidebar.button("Set Reminder"):
+    if min_temp and max_temp:
+        read_write_file('src/agent1qfu86j53jq_data.json')
+        st.success("Reminder set successfully!")
+    else:
+        st.error("Failed to set reminder.")
+
+def generate_alert(current_temp):
+    st.warning(f"Current temperature is {current_temp} °C")
 
 
 # ..............................Metrics..............................................
@@ -248,7 +246,3 @@ folium.Marker(
 # call to render Folium map in Streamlit
 st_data = st_folium(m, width=725)
 
-def generate_alert(current_temp):
-    st.warning(f"Current temperature is {current_temp} °C")
-    # ...................................................................................
-    
