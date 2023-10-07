@@ -6,7 +6,7 @@ from uagents.setup import fund_agent_if_low
 sys.path.append('src')
 from messages.converse import Location_share,Temperature_reply
 from utils.alert_func import alert
-from frontend.frontend_components import *
+from frontend.frontend_components import generate_alert
 user=Agent(
     name="user",
     # port=8002,

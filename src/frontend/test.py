@@ -1,7 +1,7 @@
 # warning_trigger.py
 
 # Import the necessary Streamlit functions
-from streamlit.server.server import Server
+from streamlit import Server
 
 # Define a function to trigger the warning in the Streamlit app
 def trigger_warning(message):
