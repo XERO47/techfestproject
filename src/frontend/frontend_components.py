@@ -127,6 +127,8 @@ def main():
         with open('file', 'w') as f:
             json.dump(data, f)
 
+    def generate_alert(current_temp):
+        st.warning(f"Current temperature is {current_temp} °C")
 
     # ..............................Metrics..............................................
 
@@ -249,9 +251,6 @@ def main():
 
 
     # ...................................................................................
-
-def generate_alert(current_temp):
-    st.warning(f"Current temperature is {current_temp} °C")
     
 if __name__ == "__main__":
     main()
