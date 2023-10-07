@@ -6,7 +6,7 @@ from uagents.setup import fund_agent_if_low
 sys.path.append('src')
 from messages.converse import Location_share,Temperature_reply
 from utils.alert_func import alert
-from frontend.frontend_components import generate_alert
+from frontend.frontend_components import *
 user=Agent(
     name="user",
     # port=8002,
@@ -37,7 +37,7 @@ async def get_information(ctx: Context,sender:str,temp:Temperature_reply):
     print(gen_alert)
     if(gen_alert==True):
         generate_alert(temp.temprature)
-        st.warning("ohk go up baby")
+        # st.warning("ohk go up baby")
         print(f"alert Up...............{temp.temprature}")
     else:
         pass
