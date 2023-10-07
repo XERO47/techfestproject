@@ -1,5 +1,5 @@
 import sys
-
+import json
 import requests
 import os
 from uagents.setup import fund_agent_if_low
@@ -22,12 +22,13 @@ fund_agent_if_low(agent.wallet.address())
 
 @agent.on_message(model=Location_share)
 async def agent_message_handler(ctx: Context, sender: str, loc: Location_share):
-    print("Got the message....................")
+    
     ctx.logger.info(f"Received Coordinates from {sender}: {loc.lat,loc.lon}")
     response=fetch_realtime_weather_data(f'{loc.lat},{loc.lon}')
-    current_temprature=parse_resposne(response)
- 
-    await ctx.send(sender, Temperature_reply(temprature=loc.lat))
+    json_object=json.loads(response)
+    current_temprature=json_object["current"]["temp_c"]
+    
+    await ctx.send(sender, Temperature_reply(temprature=f"{current_temprature}"))
  
 if __name__ == "__main__":
     agent.run()

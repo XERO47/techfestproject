@@ -12,7 +12,7 @@ import os
 file_name = 'your_script.py'
 
 def main():
-    bureau=Bureau(endpoint="http://127.0.0.1:8000/submit", port=8000)
+    bureau=Bureau( port=8001,endpoint="http://127.0.0.1:8001/submit",)
     bureau.add(agent)
     bureau.add(user)
     
@@ -20,7 +20,7 @@ def main():
     parent_dir = os.path.abspath(os.path.join(current_dir, '..'))
     
     os.chdir(parent_dir)
-    subprocess.Popen(["streamlit", "run", "src/frontend/frontend_components.py"])
+    subprocess.Popen(["streamlit", "run", "src/frontend/frontend_components.py","--server.port","8600"])
     
     bureau.run()
     

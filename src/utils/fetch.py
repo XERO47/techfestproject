@@ -14,3 +14,5 @@ def fetch_weather_forecast(location):
     response = requests.get(url)
     return response.text
 
+
+

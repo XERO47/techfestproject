@@ -112,7 +112,7 @@ def main():
         lng = g.latlng[1]
 
     # Load the JSON file
-    def read_write_file(file)
+    def read_write_file(file):
         with open('file', 'r') as f:
             data = json.load(f)
 

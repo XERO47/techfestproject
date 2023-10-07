@@ -1,5 +1,6 @@
 import sys
 from uagents import Agent,Context
+import time
 from uagents.setup import fund_agent_if_low
 sys.path.append('src')
 from messages.converse import Location_share,Temperature_reply
@@ -26,12 +27,13 @@ async def call_agent_api(ctx: Context):
            lat=ctx.storage.get('lat')[i]
            lon=ctx.storage.get('lon')[i]     
            await ctx.send(Weather_agent_address,Location_share(lat=f'{lat}',lon=f"{lon}"))
-
-    
+        #    time.sleep(10)
 @user.on_message(model=Temperature_reply)
 async def get_information(ctx: Context,sender:str,temp:Temperature_reply):
 
     ctx.logger.info(temp.temprature)
+    
+
 
     
 if __name__ == "__main__":
