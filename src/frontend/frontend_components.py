@@ -8,6 +8,7 @@ import altair as alt
 import folium
 import requests
 import json
+import re
 from PIL import Image
 from geopy.geocoders import Nominatim
 from streamlit_folium import st_folium
@@ -44,7 +45,7 @@ div.st-emotion-cache-13izhro {
     padding: 5% 5% 5% 10%;
     border-radius: 5px;
     
-    border-left: 0.5rem solid #9AD8E1 !important;
+    border-left: 0.5rem solid #FFFFFF !important;
     box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
     
 }  
@@ -70,7 +71,7 @@ def get_location_suggestions(location):
 
 
 
-location = st.sidebar.text_input("Location", key="location_input")
+location = st.sidebar.text_input("Location", key="location_input",placeholder="Enter a location")
 suggestions = get_location_suggestions(location)
 
 if suggestions:
@@ -82,8 +83,54 @@ if st.sidebar.button("Refresh"):
     st.cache(allow_output_mutation=True)
 
 
-    
-# ..................................ROWS.............................................
+# .................................Functions.........................................
+
+
+try:
+    with open('src/agent1qfu86j53jq_data.json', 'r') as f:
+        data = json.load(f)
+
+    # Modify the data as needed
+    data['lat'] =[]
+    data['lon'] = []
+    data['max_temp'] =[]
+    data['min_temp']= []
+    data['status']=[]
+
+    with open('src/agent1qfu86j53jq_data.json', 'w') as f:
+        json.dump(data, f)
+except:
+    st.toast("Please restart application!", icon='🤖')
+
+
+def save_email():
+    try:
+        with open('src/agent1qfu86j53jq_data.json', 'r') as f:
+            data = json.load(f)
+
+        # Define a regex pattern for a valid email address
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        
+        email = st.session_state.input_email
+        
+        if not re.match(pattern, email):
+                st.toast("Please enter a valid email address.", icon='🤖')
+                return
+
+        # Check if the email address is already in the JSON file
+        if email in data['email']:
+            st.toast("Email address already exists.", icon='🤖')
+            return
+
+        # Add the email address to the data dictionary
+        data['email'] = []
+        data['email'].append(st.session_state.input_email)
+
+        with open('src/agent1qfu86j53jq_data.json', 'w') as f:
+            json.dump(data, f)
+        st.toast("Email address saved successfully!", icon='🎉')
+    except:
+        st.toast("Failed to save email!", icon='🤖')
 
 
 # Get the latitude and longitude of the location using the Nominatim API
@@ -97,35 +144,46 @@ else:
     lat = g.latlng[0]
     lng = g.latlng[1]
 
-# Load the JSON file
+
+# Read and write to the JSON file
 def read_write_file(file):
-    with open(file, 'r') as f:
-        data = json.load(f)
+    try:
+        with open(file, 'r') as f:
+            data = json.load(f)
 
-    # Modify the data as needed
-    data['lat'].append(f'{lat}')
-    data['lon'].append(f'{lng}')
-    data['max_temp'].append(f'{max_temp}')
-    data['min_temp'].append(f'{min_temp}')
-    data['status'].append(True)
+        data['lat'].append(f'{lat}')
+        data['lon'].append(f'{lng}')
+        data['max_temp'].append(f'{max_temp}')
+        data['min_temp'].append(f'{min_temp}')
+        data['status'].append(True)
 
-    # Save the modified data back to the file
-    with open(file, 'w') as f:
-        json.dump(data, f)
+        with open(file, 'w') as f:
+            json.dump(data, f)
+    except:
+        st.toast("Please restart application!", icon='🤖')
+
+
 
 min_temp = st.sidebar.slider("Minimum Temperature")
 max_temp = st.sidebar.slider("Maximum Temperature")
-email = st.sidebar.text_input("Want alert in your inbox?")
 if st.sidebar.button("Set Reminder"):
     if min_temp and max_temp:
         read_write_file('src/agent1qfu86j53jq_data.json')
-        st.success("Reminder set successfully!")
+        st.toast('Reminder set successfully!', icon='🎉') 
     else:
-        st.error("Failed to set reminder.")
+        st.toast('Failed to set reminder', icon='🤖')
+
+
+
+email = st.sidebar.text_input("Want alert in your inbox?",key ="input_email" ,on_change = save_email ,placeholder="Enter your email address")
 
 def generate_alert(current_temp):
-    st.warning(f"Current temperature is {current_temp} °C")
+    st.balloons()
+    st.toast(f"Current temperature is {current_temp} °C")
 
+
+
+# ..................................ROWS.............................................
 
 # ..............................Metrics..............................................
 
@@ -159,6 +217,7 @@ except:
 
 
 # ..............................Weather forecast graph...............................
+
 
 try:
     response = fetch_weather_forecast(f'{lat},{lng}')
