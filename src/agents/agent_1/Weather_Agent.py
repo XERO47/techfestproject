@@ -1,7 +1,7 @@
 import sys
 from uagents import Agent,Context
 import time
-import streamlit as st
+
 from uagents.setup import fund_agent_if_low
 sys.path.append('src')
 from messages.converse import Location_share,Temperature_reply
@@ -19,16 +19,16 @@ fund_agent_if_low(user.wallet.address())
 
 
 # user.storage.set('status',[True])[0]
-@user.on_interval(period=5)
+@user.on_interval(period=2)
 async def call_agent_api(ctx: Context):
-    if(ctx.storage.get('lat',)==None):
-        pass
-    else:
-       for i in range(len(ctx.storage.get('lat',))):
-           lat=ctx.storage.get('lat')[i]
-           lon=ctx.storage.get('lon')[i]     
-           await ctx.send(Weather_agent_address,Location_share(lat=f'{lat}',lon=f"{lon}",num=f"{i}"))
-        #    time.sleep(10)
+    # while(ctx.storage.get('lat')==None):
+    #     ("Please Enter in GUI, visit http://localhost:8600")
+    
+    for i in range(len(ctx.storage.get('lat'))):
+        lat=ctx.storage.get('lat')[i]
+        lon=ctx.storage.get('lon')[i]     
+        await ctx.send(Weather_agent_address,Location_share(lat=f'{lat}',lon=f"{lon}",num=f"{i}"))
+    #    time.sleep(10)
 @user.on_message(model=Temperature_reply)
 async def get_information(ctx: Context,sender:str,temp:Temperature_reply):
     min_temp=ctx.storage.get('min_temp')[temp.num]
@@ -37,7 +37,7 @@ async def get_information(ctx: Context,sender:str,temp:Temperature_reply):
     print(gen_alert)
     if(gen_alert==True):
         generate_alert(temp.temprature)
-        # st.warning("ohk go up baby")
+     
         print(f"alert Up...............{temp.temprature}")
     else:
         pass
