@@ -169,6 +169,7 @@ email = st.sidebar.text_input("Want alert in your inbox?",key ="input_email" ,on
 
 
 
+st.toast(f"Your alert was triggered, details has been sent via Email.")
 #insertion
 #insertion2
     
@@ -227,8 +228,8 @@ try:
 
     # Define the color scale for the weather conditions
     scale = alt.Scale(
-        domain=["Sunny","Partly cloudy","Clear","Patchy rain possible","Moderate rain","Mist"],
-        range=["#e7ba52", "#aec7e8", "#1f77b4", "#a7a7a7", "#9467bd", "#8c564b"],
+        domain=["Sunny","Partly cloudy","Clear","Patchy rain possible","Moderate rain","Mist","Thundery outbreaks possible"],
+        range=["#e7ba52", "#aec7e8", "#1f77b4", "#a7a7a7", "#9467bd", "#8c564b","#ff7f0e"],
     )
     color = alt.Color("weather:N", scale=scale)
 
