@@ -60,6 +60,7 @@ Your application should start shortly.
 
 ## Contributing
 The guidelines for contributing to the project can be found in the [CONTRIBUTING.md]() file. It is recommended to follow these guidelines to ensure that contributions are consistent and meet the project's standards.
+
 **Team Lead**:  Ayush Kumar
    
 **Team members**: Abhishek Patil
