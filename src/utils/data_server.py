@@ -10,7 +10,7 @@ async def get_json():
     
     # Read the JSON file
     with open("src/agent1qfu86j53jq_data.json", "r") as file:
-        print(file)
+        
         data = json.load(file)
     
     return data  # Return the JSON data as the response
