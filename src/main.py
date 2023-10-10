@@ -21,7 +21,6 @@ def main():
     
     os.chdir(parent_dir)
     subprocess.Popen(["streamlit", "run", "src/frontend/frontend_components.py","--server.port","8600"])
-    
     time.sleep(3)
     subprocess.Popen(["python", "src/utils/data_server.py",])
     time.sleep(3)
