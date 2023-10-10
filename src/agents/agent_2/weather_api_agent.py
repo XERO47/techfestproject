@@ -7,7 +7,6 @@ from uagents import Agent, Context, Model
 
 sys.path.append('src')
 from utils.fetch import fetch_realtime_weather_data
-from utils.parse_response import parse_resposne
 from messages.converse import Location_share,Temperature_reply
 
 
