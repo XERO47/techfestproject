@@ -13,8 +13,8 @@ from PIL import Image
 from geopy.geocoders import Nominatim
 from streamlit_folium import st_folium
 import geocoder
-
-
+from streamlit_autorefresh import st_autorefresh
+from main import bureau
 
 from utils.fetch import *
 
@@ -86,21 +86,7 @@ if st.sidebar.button("Refresh"):
 # .................................Functions.........................................
 
 
-try:
-    with open('src/agent1qfu86j53jq_data.json', 'r') as f:
-        data = json.load(f)
 
-    # Modify the data as needed
-    data['lat'] =[]
-    data['lon'] = []
-    data['max_temp'] =[]
-    data['min_temp']= []
-    data['status']=[]
-
-    with open('src/agent1qfu86j53jq_data.json', 'w') as f:
-        json.dump(data, f)
-except:
-    st.toast("Please restart application!", icon='🤖')
 
 
 def save_email():
@@ -153,8 +139,8 @@ def read_write_file(file):
 
         data['lat'].append(f'{lat}')
         data['lon'].append(f'{lng}')
-        data['max_temp'].append(f'{max_temp}')
-        data['min_temp'].append(f'{min_temp}')
+        data['max_temp'].append(max_temp)
+        data['min_temp'].append(min_temp)
         data['status'].append(True)
 
         with open(file, 'w') as f:
@@ -169,6 +155,7 @@ max_temp = st.sidebar.slider("Maximum Temperature")
 if st.sidebar.button("Set Reminder"):
     if min_temp and max_temp:
         read_write_file('src/agent1qfu86j53jq_data.json')
+        
         st.toast('Reminder set successfully!', icon='🎉') 
     else:
         st.toast('Failed to set reminder', icon='🤖')
@@ -177,9 +164,14 @@ if st.sidebar.button("Set Reminder"):
 
 email = st.sidebar.text_input("Want alert in your inbox?",key ="input_email" ,on_change = save_email ,placeholder="Enter your email address")
 
-def generate_alert(current_temp):
-    st.balloons()
-    st.toast(f"Current temperature is {current_temp} °C")
+
+
+
+
+
+#insertion
+#insertion2
+    
 
 
 
@@ -305,3 +297,5 @@ folium.Marker(
 # call to render Folium map in Streamlit
 st_data = st_folium(m, width=725)
 
+
+st_autorefresh(interval=50000, key="fizzbuzzcounter")

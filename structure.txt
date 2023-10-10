@@ -1,0 +1,52 @@
+.
+├── README.md
+├── poetry.lock
+├── pyproject.toml
+├── src
+│   ├── __init__ .py
+│   ├── __pycache__
+│   │   └── main.cpython-310.pyc
+│   ├── agent1qfu86j53jq_data.json
+│   ├── agents
+│   │   ├── __init__ .py
+│   │   ├── agent_1
+│   │   │   ├── Weather_Agent.py
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── Weather_Agent.cpython-310.pyc
+│   │   │   │   ├── __init__.cpython-310.pyc
+│   │   │   │   └── iterate.cpython-310.pyc
+│   │   │   └── iterate.py
+│   │   └── agent_2
+│   │       ├── __init__.py
+│   │       ├── __pycache__
+│   │       │   ├── __init__.cpython-310.pyc
+│   │       │   └── weather_api_agent.cpython-310.pyc
+│   │       └── weather_api_agent.py
+│   ├── frontend
+│   │   ├── __init__ .py
+│   │   ├── __pycache__
+│   │   │   ├── frontend_components.cpython-310.pyc
+│   │   │   └── streamlit.cpython-310.pyc
+│   │   └── frontend_components.py
+│   ├── main.py
+│   ├── messages
+│   │   ├── __init__ .py
+│   │   ├── __pycache__
+│   │   │   └── converse.cpython-310.pyc
+│   │   └── converse.py
+│   └── utils
+│       ├── __init__.py
+│       ├── __pycache__
+│       │   ├── __init__.cpython-310.pyc
+│       │   ├── alert_func.cpython-310.pyc
+│       │   ├── fetch.cpython-310.pyc
+│       │   ├── mail_service.cpython-310.pyc
+│       │   └── parse_response.cpython-310.pyc
+│       ├── alert_func.py
+│       ├── data_server.py
+│       ├── fetch.py
+│       └── mail_service.py
+└── structure.txt
+
+13 directories, 36 files
