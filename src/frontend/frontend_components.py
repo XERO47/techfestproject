@@ -298,4 +298,4 @@ folium.Marker(
 st_data = st_folium(m, width=725)
 
 
-st_autorefresh(interval=50000, key="fizzbuzzcounter")
+st_autorefresh(interval=10000, key="fizzbuzzcounter")
