@@ -1,5 +1,5 @@
 # Weather Alert System
-In this repository we have integrated Uagents library with stream-lit, fast-api to make autonomous Agents to generate alert via Email, and streamlit Frontend.
+In this repository we have integrated Uagents library with stream-lit, fast-api to make autonomous Agents to generate alert for weather conditions via Email, and streamlit Frontend.
 
 
 **Note**: Enter your email address in the input bar and press "Enter".
@@ -23,7 +23,7 @@ poetry shell
 ```bash
 python main.py
 ```
-###Your Streamlit application should start shortly.
+### Your Streamlit application should start shortly.
 ## Contributing
 
 ### Team Lead
