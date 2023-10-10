@@ -68,4 +68,6 @@ This project is available under the [MIT License](
 
 * [Uagents](https://fetch.ai/docs)
 * [Streamlit](https://docs.streamlit.io/)
+* [FastAPI](https://fastapi.tiangolo.com/)
+* [OpenWeatherMap](https://openweathermap.org/api)
 
