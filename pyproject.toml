@@ -14,6 +14,8 @@ geopy = "^2.4.0"
 python-dotenv = "^1.0.0"
 fastapi = "^0.103.2"
 geocoder = "^1.38.1"
+matplotlib = "^3.8.0"
+streamlit-autorefresh = "^1.0.1"
 
 
 [build-system]
