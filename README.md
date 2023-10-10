@@ -25,7 +25,7 @@ To get started with the Weather Alert System, follow these steps:
 
 That's it! You should now be able to use the **Weather Alert System** to receive weather alerts via email.
 
->**Note**:  Use light theme of `Streamlit` for better experience.
+**Note**:  Use light theme of `Streamlit` for better experience.
 
 
 
