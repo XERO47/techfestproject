@@ -39,11 +39,7 @@ git clone
 Open a terminal in root directory of the repository and enter the following commands
 ```bash
 poetry install
-```
-```bash
 cd ./src
-```
-```bash
 poetry shell
 ```
 #### Step-3: Run the application.
@@ -70,6 +66,6 @@ This project is available under the [MIT License](
 ).
 ## References
 
-* [Uagents]()
-* [Streamlit]()
+* [Uagents](https://fetch.ai/docs)
+* [Streamlit](https://docs.streamlit.io/)
 
