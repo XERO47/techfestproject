@@ -14,7 +14,7 @@ from geopy.geocoders import Nominatim
 from streamlit_folium import st_folium
 import geocoder
 from streamlit_autorefresh import st_autorefresh
-from main import bureau
+
 
 from utils.fetch import *
 
